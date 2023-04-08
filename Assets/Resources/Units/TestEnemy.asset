@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 094799617924a614fabb4857b668ab7e, type: 3}
+  m_Name: TestEnemy
+  m_EditorClassIdentifier: 
+  Name: blargh
+  Description: 
+  MAX_HP: 16
+  HP: 16
+  STR: 4
+  MGC: 1
+  SKL: 5
+  SPD: 2
+  LCK: 5
+  DEF: 8
+  RES: 1
+  MOV: 5
+  CON: 5
+  unitIcon: {fileID: 5860325458425312261, guid: 3d25ce631eaba984ebb41153d02cfb10, type: 3}
+  faction: 0
+  characterClass: {fileID: 11400000, guid: edd9bf926ff1a50439dc21b1e61fd378, type: 2}
+  extraWeaponProficiences: []
+  level: 1
