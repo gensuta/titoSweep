@@ -8,7 +8,7 @@ public class TileBehavior : MonoBehaviour
 {
     [SerializeField] Sprite[] tileSprites;
 
-    [SerializeField] private Color baseColor, highlightColor;
+    [SerializeField] private Color baseColor, highlightColor, canMoveColor, moveHighlightColor;
     [SerializeField] private SpriteRenderer sr;
     public UnitBehaviour OccupiedUnit;
 
@@ -34,7 +34,8 @@ public class TileBehavior : MonoBehaviour
     public Vector2Int location { get { return tile.location; } set { tile.location = value; } }
 
     public TileBehavior prevTile;
-    
+
+    private bool isInPath;
 
     public bool walkable => OccupiedUnit == null && tile.isPassable; // it's more complicated than this. you cant pass thru enemy tiles unless ur a thief.
 
@@ -48,22 +49,39 @@ public class TileBehavior : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (StateManager.currentState != GameState.HeroesTurn) return;
         Highlight();
     }
 
     private void OnMouseExit()
     {
-        sr.color = baseColor;
+        if (StateManager.currentState != GameState.HeroesTurn) return;
 
+        if (!isInPath) UnHighlight();
+        else sr.color = canMoveColor;
     }
 
     public void Highlight()
     {
-        sr.color = highlightColor;
+        if (!isInPath) sr.color = highlightColor;
+        else sr.color = moveHighlightColor;
+    }
+
+    public void MovementHighlight()
+    {
+        sr.color = canMoveColor;
+        isInPath = true;
+    }
+
+    public void UnHighlight()
+    {
+        sr.color = baseColor;
+        isInPath = false;
     }
 
     private void OnMouseDown()
     {
+        if (StateManager.currentState != GameState.HeroesTurn) return;
         OnTileSelected?.Invoke(this);
     }
 

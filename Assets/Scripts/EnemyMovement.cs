@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour, UnitMovement
 {
+
+    [SerializeField] private float moveSpeed;
     public UnitBehaviour SelectedUnit { get; set; }
 
     public PathFinder pathFinder { get; set; }
@@ -32,17 +34,19 @@ public class EnemyMovement : MonoBehaviour, UnitMovement
 
         if (Vector2.Distance(startPos, nextpos) < 0.0001f)
         {
-            if (path.Count == 1)
-            {
-                SelectUnit(null);
-            }
             path.RemoveAt(0);
         }
     }
 
-    public void MoveEnemies() // enemy doesn't move unless a player/ally is within range
+    public void MoveEnemies()
+    {
+        StartCoroutine(MovingEnemies());
+    }
+
+    private IEnumerator MovingEnemies() // enemy doesn't move unless a player/ally is within range
     {
         int i = 0;
+        yield return new WaitForSeconds(0.6f);
 
         while (i < enemies.Count)
         {
@@ -103,19 +107,27 @@ public class EnemyMovement : MonoBehaviour, UnitMovement
                 if (path.Count > 0)
                 {
                     MoveAlongPath();
+                    yield return new WaitForSeconds(moveSpeed);
                 }
                 else
                 {
+                    targetTile.OccupiedUnit = SelectedUnit;
                     enemies[i].turnTaken = true;
-
                 }
             }
+            yield return new WaitForSeconds(.5f);
             i++;
         }
 
-        //TODO: back to heroes turn afterwards
+        FinishEnemyState();
 
-        //yield return new WaitForSeconds(.25f);
+    }
+
+    public void FinishEnemyState()
+    {
+        SelectUnit(null);
+        foreach (var enemy in enemies) {  enemy.turnTaken = false; }
+        StateManager.Instance.ChangeState(GameState.HeroesTurn);
     }
 
     public void SelectUnit(UnitBehaviour unit)

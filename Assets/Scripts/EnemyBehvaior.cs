@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class EnemyBehvaior : UnitBehaviour
 {
-    public bool turnTaken = false;
     EnemyMovement enemyMovement;
 
-    public void Start()
+    public override void Start()
     {
         base.Start();
         enemyMovement = FindObjectOfType<EnemyMovement>();

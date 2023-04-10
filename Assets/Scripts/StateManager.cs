@@ -7,8 +7,13 @@ public enum GameState { SpawnHeroes,SpawnEnemies,HeroesTurn,EnemiesTurn}
 public class StateManager : MonoBehaviour
 {
     public UnityEvent OnEnemyStart;
+
+    public static StateManager Instance;
+
     private void Awake()
     {
+        if(Instance == null) Instance = this;
+        else if (this != Instance) { Destroy(this.gameObject); }
         ChangeState(GameState.HeroesTurn); // TODO: Fix this plx
     }
 
@@ -20,6 +25,7 @@ public class StateManager : MonoBehaviour
         }
     }
     public static GameState currentState;
+
     public void ChangeState(GameState state)
     {
         currentState = state;

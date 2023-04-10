@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f02b70d20ec45884ebed7551de2a736f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.005
   enemies: []
 --- !u!4 &257581936
 Transform:
@@ -425,6 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0594bca86f0ed7a4ba8d476164d53c1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
 --- !u!4 &1438850296
 Transform:
   m_ObjectHideFlags: 0

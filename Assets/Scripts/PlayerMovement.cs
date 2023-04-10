@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
     public List<TileBehavior> path { get; set; }
     public float speed { get; set; }
 
+    public List<HeroBehavior> players = new List<HeroBehavior>();
+
     private void OnEnable()
     {
         TileBehavior.OnTileSelected += OnTileChosen;
@@ -36,8 +38,6 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
     public void OnTileChosen(TileBehavior tile)
     {
 
-        if (StateManager.currentState != GameState.HeroesTurn) return; // TODO: maybe move this
-
         UnitBehaviour unit = tile.OccupiedUnit;
 
         if (unit != null)
@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
                 // attempts to kill enemy ( bring up ui for what attack to use and confirm ur attack )
                 if (SelectedUnit != null && unit.faction == Faction.Enemy)
                 {
-                    Debug.Log("Get that fucking guy RIGHT now");
+                    Destroy(unit.gameObject);
                     SelectUnit(null);
                 }
                 else
@@ -67,19 +67,48 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
         {
             if (SelectedUnit != null && tile.walkable)
             {
-                if (GetTilesWithinRange().Contains(tile)) // must be within the player's movement range or w/e
+                List<TileBehavior> tilesInRange = GetTilesWithinRange();
+                if (tilesInRange.Contains(tile)) // must be within the player's movement range or w/e
                 {
                     SetPath(tile);
                     tile.SetUnit(SelectedUnit);
+                    SelectedUnit.turnTaken = true;
+                    if (isHeroTurnFinished()) { FinishPlayerTurn(); }
+                    ClearPath(tilesInRange);
                 }
             }
+        }
+    }
+
+    public void FinishPlayerTurn()
+    {
+        foreach (var p in players) { p.turnTaken = false; }
+        StateManager.Instance.ChangeState(GameState.EnemiesTurn);
+    }
+
+    bool isHeroTurnFinished()
+    {
+        int amtFinished = 0;
+        foreach(HeroBehavior hero in players)
+        {
+            if(hero.turnTaken) amtFinished++;
+        }
+
+        if(amtFinished == players.Count) return true;
+         else return false;
+    }
+
+    private void ClearPath(List<TileBehavior> path)
+    {
+        foreach (TileBehavior tile in path)
+        {
+            tile.UnHighlight();
         }
     }
 
     public void SetPath(TileBehavior end)
     {
         path = pathFinder.FindPath(SelectedUnit.currentTile, end);
-
     }
 
     private void LateUpdate()
@@ -123,7 +152,7 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
                 float xCost = t.location.x - playerPos.x;
                 float yCost = t.location.y - playerPos.y;
 
-                if (xCost == 0 && yCost == 0) { tiles.Add(t); t.Highlight(); continue; }
+                if (xCost == 0 && yCost == 0) { tiles.Add(t); t.MovementHighlight(); continue; }
 
                 if(Mathf.Abs(xCost) > 0 && Mathf.Abs(yCost) > 0) // diagonals
                 {
@@ -144,7 +173,7 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
                             if (totalCost >= 0 && !tiles.Contains(t))
                             {
                                 tiles.Add(t);
-                                t.Highlight();
+                                t.MovementHighlight();
                             }
                         }
                     }
@@ -170,7 +199,7 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
 
                             int totalCost = MOV - moveCost;
 
-                            if (totalCost >= 0 && !tiles.Contains(vertTile)) { tiles.Add(vertTile); vertTile.Highlight(); }
+                            if (totalCost >= 0 && !tiles.Contains(vertTile)) { tiles.Add(vertTile); vertTile.MovementHighlight(); }
 
                         }
                     }
@@ -191,7 +220,7 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
 
                             int totalCost = MOV - moveCost;
 
-                            if (totalCost >= 0 && !tiles.Contains(vertTile)) { tiles.Add(vertTile); vertTile.Highlight(); }
+                            if (totalCost >= 0 && !tiles.Contains(vertTile)) { tiles.Add(vertTile); vertTile.MovementHighlight(); }
 
                         }
                     }
@@ -222,7 +251,7 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
 
                             int totalCost = MOV - moveCost;
 
-                            if (totalCost >= 0 && !tiles.Contains(horzTile)) { tiles.Add(horzTile); horzTile.Highlight(); }
+                            if (totalCost >= 0 && !tiles.Contains(horzTile)) { tiles.Add(horzTile); horzTile.MovementHighlight(); }
 
                         }
                     }
@@ -242,7 +271,7 @@ public class PlayerMovement : MonoBehaviour, UnitMovement
 
                             int totalCost = MOV - moveCost;
 
-                            if (totalCost >= 0 && !tiles.Contains(horzTile)) { tiles.Add(horzTile); horzTile.Highlight(); }
+                            if (totalCost >= 0 && !tiles.Contains(horzTile)) { tiles.Add(horzTile); horzTile.MovementHighlight(); }
 
                         }
                     }

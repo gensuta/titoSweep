@@ -129,6 +129,8 @@ MonoBehaviour:
   - {fileID: 5945357789820212794, guid: 3d25ce631eaba984ebb41153d02cfb10, type: 3}
   baseColor: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
   highlightColor: {r: 1, g: 1, b: 1, a: 1}
+  canMoveColor: {r: 0.9056604, g: 0.815267, b: 0.252047, a: 1}
+  moveHighlightColor: {r: 1, g: 0.8718091, b: 0.504717, a: 1}
   sr: {fileID: 0}
   OccupiedUnit: {fileID: 0}
   prevTile: {fileID: 0}

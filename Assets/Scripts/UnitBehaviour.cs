@@ -21,9 +21,12 @@ public class UnitBehaviour : MonoBehaviour
 
     public Faction faction => unit.faction;
 
-    private SpriteRenderer sr;
+    protected SpriteRenderer sr;
 
-    public void Start()
+    public bool turnTaken;
+
+
+    public virtual void Start()
     {
         sr = GetComponent<SpriteRenderer>();    
         if (unit.level <= 1)

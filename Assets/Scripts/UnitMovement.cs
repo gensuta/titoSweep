@@ -7,8 +7,7 @@ public interface UnitMovement
 
     PathFinder pathFinder { get; set; }
     List<TileBehavior> path { get; set; }
-    float speed { get; set; }   
-
+    float speed { get; set; }
 
     void SelectUnit(UnitBehaviour unit);
 
